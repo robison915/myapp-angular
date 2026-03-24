@@ -1,0 +1,25 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-title>Lista de nomes</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <ion-list *ngIf="names.length > 0; else estadoVazio" lines="full">
+    <ion-item *ngFor="let name of names; let i = index; trackBy: referenciaIndice">
+      <ion-label>{{ i + 1 }}. {{ name }}</ion-label>
+    </ion-item>
+  </ion-list>
+
+  <ng-template #estadoVazio>
+    <div class="empty-state">
+      <p>Nenhum nome salvo.</p>
+    </div>
+  </ng-template>
+
+  <div class="actions">
+    <ion-button expand="block" fill="outline" (click)="voltarCadastro()">
+      Voltar para cadastro
+    </ion-button>
+  </div>
+</ion-content>

@@ -1,0 +1,26 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-title>Cadastro de nomes</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <ion-list lines="full">
+    <ion-item *ngFor="let name of names; let i = index; trackBy: referenciaIndice">
+      <ion-input
+        [(ngModel)]="names[i]"
+        label="Nome {{ i + 1 }}"
+        placeholder="Digite um nome"
+      ></ion-input>
+    </ion-item>
+  </ion-list>
+
+  <div class="actions">
+    <ion-button expand="block" fill="outline" (click)="adicionarNome()">
+      Adicionar mais nomes
+    </ion-button>
+    <ion-button expand="block" (click)="salvarNomes()" [disabled]="!podeSalvar()">
+      Salvar nomes
+    </ion-button>
+  </div>
+</ion-content>
