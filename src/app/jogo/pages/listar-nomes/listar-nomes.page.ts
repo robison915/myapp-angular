@@ -27,4 +27,18 @@ export class ListarNomesPage {
   voltarCadastro(): void {
     this.router.navigate(['/jogo']);
   }
+
+  limparLista(): void {
+    this.jogoNomesStorageService.limparNomes();
+    this.names = [];
+    this.router.navigate(['/jogo']);
+  }
+
+  iniciarPartidas(): void {
+    if (this.names.length < 2) {
+      return;
+    }
+
+    this.router.navigate(['/jogo/partidas']);
+  }
 }

@@ -1,0 +1,70 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-title>Partidas - Rodada {{ rodadaAtual }}</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <div *ngIf="jogadores.length < 2; else areaConfrontos" class="empty-state">
+    <p>Cadastre pelo menos 2 jogadores para iniciar partidas.</p>
+  </div>
+
+  <ng-template #areaConfrontos>
+    <div class="confrontos">
+      <ion-card *ngFor="let confronto of confrontos; let i = index; trackBy: referenciaIndice">
+        <ion-card-header>
+          <ion-card-title>Confronto {{ i + 1 }}</ion-card-title>
+        </ion-card-header>
+
+        <ion-card-content>
+          <ng-container *ngIf="confronto.jogador2; else folga">
+            <p class="match-label">
+              {{ confronto.jogador1 }} x {{ confronto.jogador2 }}
+            </p>
+
+            <div class="winner-buttons">
+              <ion-button
+                expand="block"
+                [fill]="confronto.vencedor === confronto.jogador1 ? 'solid' : 'outline'"
+                (click)="definirVencedor(confronto.id, confronto.jogador1)"
+              >
+                {{ confronto.jogador1 }} venceu
+              </ion-button>
+
+              <ion-button
+                expand="block"
+                [fill]="confronto.vencedor === confronto.jogador2 ? 'solid' : 'outline'"
+                (click)="definirVencedor(confronto.id, confronto.jogador2)"
+              >
+                {{ confronto.jogador2 }} venceu
+              </ion-button>
+            </div>
+          </ng-container>
+
+          <ng-template #folga>
+            <p class="match-label">{{ confronto.jogador1 }} fica de folga nesta rodada.</p>
+            <p class="winner-label">Avanca automaticamente.</p>
+          </ng-template>
+
+          <p *ngIf="confronto.vencedor" class="winner-label">
+            Vencedor: {{ confronto.vencedor }}
+          </p>
+        </ion-card-content>
+      </ion-card>
+    </div>
+  </ng-template>
+
+  <div class="actions">
+    <ion-button
+      expand="block"
+      (click)="criarNovaRodada()"
+      [disabled]="!todosVencedoresDefinidos()"
+    >
+      Criar nova rodada
+    </ion-button>
+
+    <ion-button expand="block" fill="outline" (click)="voltarLista()">
+      Voltar para lista
+    </ion-button>
+  </div>
+</ion-content>

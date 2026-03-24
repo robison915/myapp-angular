@@ -18,6 +18,12 @@
   </ng-template>
 
   <div class="actions">
+    <ion-button expand="block" (click)="iniciarPartidas()" [disabled]="names.length < 2">
+      Iniciar partidas
+    </ion-button>
+    <ion-button expand="block" color="danger" (click)="limparLista()">
+      Limpar lista e voltar
+    </ion-button>
     <ion-button expand="block" fill="outline" (click)="voltarCadastro()">
       Voltar para cadastro
     </ion-button>
