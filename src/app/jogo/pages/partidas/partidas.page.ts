@@ -1,12 +1,17 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { JogoNomesStorageService } from '../../services/jogo-nomes-storage.service';
+import {
+  JogoRankingStorageService,
+  ResultadoPartida,
+} from '../../services/jogo-ranking-storage.service';
 
 interface Confronto {
   id: number;
   jogador1: string;
   jogador2: string | null;
   vencedor: string | null;
+  tempoVitoriaSegundos: number | null;
 }
 
 @Component({
@@ -22,7 +27,8 @@ export class PartidasPage {
 
   constructor(
     private readonly router: Router,
-    private readonly jogoNomesStorageService: JogoNomesStorageService
+    private readonly jogoNomesStorageService: JogoNomesStorageService,
+    private readonly jogoRankingStorageService: JogoRankingStorageService
   ) {}
 
   ionViewWillEnter(): void {
@@ -31,6 +37,7 @@ export class PartidasPage {
       .map((nome) => nome.trim())
       .filter((nome) => nome.length > 0);
 
+    this.jogoRankingStorageService.sincronizarJogadores(this.jogadores);
     this.rodadaAtual = 1;
     this.confrontos = this.gerarConfrontos(this.jogadores);
   }
@@ -45,21 +52,58 @@ export class PartidasPage {
     );
   }
 
-  todosVencedoresDefinidos(): boolean {
+  definirTempoVitoria(confrontoId: number, value: number | string | null): void {
+    const parsed = Number(value);
+    const tempoVitoriaSegundos =
+      Number.isFinite(parsed) && parsed > 0 ? Math.round(parsed) : null;
+
+    this.confrontos = this.confrontos.map((confronto) =>
+      confronto.id === confrontoId ? { ...confronto, tempoVitoriaSegundos } : confronto
+    );
+  }
+
+  todosResultadosDefinidos(): boolean {
     if (this.confrontos.length === 0) {
       return false;
     }
 
-    return this.confrontos.every((confronto) => confronto.vencedor !== null);
+    return this.confrontos.every((confronto) => {
+      if (confronto.vencedor === null) {
+        return false;
+      }
+
+      if (confronto.jogador2 === null) {
+        return true;
+      }
+
+      return confronto.tempoVitoriaSegundos !== null;
+    });
   }
 
   criarNovaRodada(): void {
-    if (!this.todosVencedoresDefinidos()) {
+    if (!this.todosResultadosDefinidos()) {
       return;
     }
 
     this.rodadaAtual += 1;
     this.confrontos = this.gerarConfrontos(this.jogadores);
+  }
+
+  finalizarRodada(): void {
+    if (!this.todosResultadosDefinidos()) {
+      return;
+    }
+
+    const resultados: ResultadoPartida[] = this.confrontos
+      .filter((confronto): confronto is Confronto & { vencedor: string } => confronto.vencedor !== null)
+      .map((confronto) => ({
+        vencedor: confronto.vencedor,
+        tempoVitoriaSegundos: confronto.tempoVitoriaSegundos ?? 0,
+        tevePartida: confronto.jogador2 !== null,
+      }));
+
+    this.jogoRankingStorageService.registrarResultadosRodada(resultados);
+    this.router.navigate(['/jogo/ranking']);
   }
 
   voltarLista(): void {
@@ -80,6 +124,7 @@ export class PartidasPage {
         jogador1,
         jogador2,
         vencedor: jogador2 === null ? jogador1 : null,
+        tempoVitoriaSegundos: jogador2 === null ? 0 : null,
       });
     }
 

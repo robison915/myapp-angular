@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { JogoNomesStorageService } from '../../services/jogo-nomes-storage.service';
+import { JogoRankingStorageService } from '../../services/jogo-ranking-storage.service';
 
 @Component({
   selector: 'app-listar-nomes',
@@ -13,7 +14,8 @@ export class ListarNomesPage {
 
   constructor(
     private readonly router: Router,
-    private readonly jogoNomesStorageService: JogoNomesStorageService
+    private readonly jogoNomesStorageService: JogoNomesStorageService,
+    private readonly jogoRankingStorageService: JogoRankingStorageService
   ) {}
 
   ionViewWillEnter(): void {
@@ -30,6 +32,7 @@ export class ListarNomesPage {
 
   limparLista(): void {
     this.jogoNomesStorageService.limparNomes();
+    this.jogoRankingStorageService.limparRanking();
     this.names = [];
     this.router.navigate(['/jogo']);
   }

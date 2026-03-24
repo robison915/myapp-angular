@@ -1,0 +1,35 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-title>Ranking do campeonato</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <ion-list *ngIf="ranking.length > 0; else semDados" lines="full">
+    <ion-item *ngFor="let jogador of ranking; let i = index; trackBy: referenciaIndice">
+      <ion-label>
+        <h2>{{ i + 1 }}. {{ jogador.nome }}</h2>
+        <p>Vitórias: {{ jogador.vitorias }}</p>
+        <p>Tempo total nas vitórias: {{ formatarTempo(jogador.tempoTotalSegundos) }}</p>
+      </ion-label>
+    </ion-item>
+  </ion-list>
+
+  <ng-template #semDados>
+    <div class="empty-state">
+      <p>Nenhum resultado de rodada foi finalizado ainda.</p>
+    </div>
+  </ng-template>
+
+  <div class="actions">
+    <ion-button expand="block" (click)="criarNovaRodada()">
+      Criar nova rodada
+    </ion-button>
+    <ion-button expand="block" color="danger" (click)="limparEVoltarCadastro()">
+      Limpar e voltar para cadastro
+    </ion-button>
+    <ion-button expand="block" fill="outline" (click)="voltarLista()">
+      Voltar para lista
+    </ion-button>
+  </div>
+</ion-content>

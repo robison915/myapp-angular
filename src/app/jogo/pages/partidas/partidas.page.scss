@@ -19,6 +19,12 @@
   gap: 8px;
 }
 
+.time-field {
+  margin-top: 10px;
+  --padding-start: 0;
+  --inner-padding-end: 0;
+}
+
 .winner-label {
   margin: 12px 0 0;
   font-size: 14px;

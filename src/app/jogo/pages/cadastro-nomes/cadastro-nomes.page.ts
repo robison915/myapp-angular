@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { JogoNomesStorageService } from '../../services/jogo-nomes-storage.service';
+import { JogoRankingStorageService } from '../../services/jogo-ranking-storage.service';
 
 @Component({
   selector: 'app-cadastro-nomes',
@@ -13,7 +14,8 @@ export class CadastroNomesPage {
 
   constructor(
     private readonly router: Router,
-    private readonly jogoNomesStorageService: JogoNomesStorageService
+    private readonly jogoNomesStorageService: JogoNomesStorageService,
+    private readonly jogoRankingStorageService: JogoRankingStorageService
   ) {}
 
   adicionarNome(): void {
@@ -38,6 +40,7 @@ export class CadastroNomesPage {
     }
 
     this.jogoNomesStorageService.salvarNomes(validNames);
+    this.jogoRankingStorageService.resetarComJogadores(validNames);
     this.router.navigate(['/jogo/listar-nomes']);
   }
 }

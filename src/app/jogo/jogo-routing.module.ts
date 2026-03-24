@@ -3,6 +3,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { CadastroNomesPage } from './pages/cadastro-nomes/cadastro-nomes.page';
 import { ListarNomesPage } from './pages/listar-nomes/listar-nomes.page';
 import { PartidasPage } from './pages/partidas/partidas.page';
+import { RankingPage } from './pages/ranking/ranking.page';
 
 const routes: Routes = [
   {
@@ -17,6 +18,10 @@ const routes: Routes = [
   {
     path: 'partidas',
     component: PartidasPage,
+  },
+  {
+    path: 'ranking',
+    component: RankingPage,
   },
 ];
 
